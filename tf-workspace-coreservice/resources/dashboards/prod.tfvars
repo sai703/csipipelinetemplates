@@ -1,0 +1,3 @@
+env = "prd"
+
+location = "centralus" 

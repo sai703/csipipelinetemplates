@@ -1,0 +1,90 @@
+module "ebze-vm-resource-prod-eastus2" {
+  source  = "app.terraform.io/csiseg/virtual-machine/csi"
+  version = "1.0.9.2"
+  computer_name       = "AzuMISE01"
+  vmrg_name           = module.ebze-vm-resourcegroup-eastus2.name
+  location            = "eastus2"
+  networkinterface_id = [module.ebze-vm-nic-eastus2.network_interface_id]
+  vm_name             = "AzuMISE01"
+  vm_size             = "Standard_E2s_v4"
+  vmstorage_type      = "Premium_LRS"
+  vm_publisher        = "MicrosoftWindowsServer"
+  vm_offer            = "WindowsServer"
+  vm_sku              = "2022-Datacenter"
+  vm_version          = "latest"
+  vm_username         = "InterSvcsEbze"
+  vm_password         = "InterSvcsEbze2022!"
+  mmaagent_version    = "1.0"
+  mmaagent_name       = "vmext-ebze-dcops-prod-eastus2"
+  workspace_id        = module.internal-server-resources-logAnalytics-eastus2.workspace_id
+  workspace_key       = module.internal-server-resources-logAnalytics-eastus2.workspace_key
+  tags                = local.eastus2_tags
+}
+
+module "pbis-vm-resource-prod-eastus2" {
+  source  = "app.terraform.io/csiseg/virtual-machine/csi"
+  version = "1.0.9.2"
+  computer_name       = "AzuMISE03"
+  vmrg_name           = module.ebze-vm-resourcegroup-eastus2.name
+  location            = "eastus2"
+  networkinterface_id = [module.pbis-vm-nic-eastus2.network_interface_id]
+  vm_name             = "AZUMISE03"
+  vm_size             = "Standard_E2s_v4"
+  vmstorage_type      = "Premium_LRS"
+  vm_publisher        = "MicrosoftWindowsServer"
+  vm_offer            = "WindowsServer"
+  vm_sku              = "2022-Datacenter"
+  vm_version          = "latest"
+  vm_username         = "InterSvcsEbze"
+  vm_password         = "InterSvcsEbze2022!"
+  mmaagent_version    = "1.0"
+  mmaagent_name       = "vmext-pbis-dcops-prod-eastus2"
+  workspace_id        = module.internal-server-resources-logAnalytics-eastus2.workspace_id
+  workspace_key       = module.internal-server-resources-logAnalytics-eastus2.workspace_key
+  tags                = local.eastus2_tags
+}
+module "ebze-vm-resource-prod-centralus" {
+  source  = "app.terraform.io/csiseg/virtual-machine/csi"
+  version = "1.0.9.2"
+  computer_name       = "AzuMISE02"
+  vmrg_name           = module.ebze-vm-resourcegroup-centralus.name
+  location            = "centralus"
+  networkinterface_id = [module.ebze-vm-nic-centralus.network_interface_id]
+  vm_name             = "AzuMISE02"
+  vm_size             = "Standard_E2s_v4"
+  vmstorage_type      = "Premium_LRS"
+  vm_publisher        = "MicrosoftWindowsServer"
+  vm_offer            = "WindowsServer"
+  vm_sku              = "2022-Datacenter"
+  vm_version          = "latest"
+  vm_username         = "InterSvcsEbze"
+  vm_password         = "InterSvcsEbze2022!"
+  mmaagent_version    = "1.0"
+  mmaagent_name       = "vmext-ebze-dcops-prod-centralus"
+  workspace_id        = module.internal-server-resources-logAnalytics-centralus.workspace_id
+  workspace_key       = module.internal-server-resources-logAnalytics-centralus.workspace_key
+  tags                = local.centralus_tags
+}
+
+module "pbis-vm-resource-prod-centralus" {
+  source  = "app.terraform.io/csiseg/virtual-machine/csi"
+  version = "1.0.9.2"
+  computer_name       = "AzuMISE04"
+  vmrg_name           = module.ebze-vm-resourcegroup-centralus.name
+  location            = "centralus"
+  networkinterface_id = [module.pbis-vm-nic-centralus.network_interface_id]
+  vm_name             = "AzuMISE04"
+  vm_size             = "Standard_E2s_v4"
+  vmstorage_type      = "Premium_LRS"
+  vm_publisher        = "MicrosoftWindowsServer"
+  vm_offer            = "WindowsServer"
+  vm_sku              = "2022-Datacenter"
+  vm_version          = "latest"
+  vm_username         = "InterSvcsEbze"
+  vm_password         = "InterSvcsEbze2022!"
+  mmaagent_version    = "1.0"
+  mmaagent_name       = "vmext-pbis-dcops-prod-centralus"
+  workspace_id        = module.internal-server-resources-logAnalytics-centralus.workspace_id
+  workspace_key       = module.internal-server-resources-logAnalytics-centralus.workspace_key
+  tags                = local.centralus_tags
+}

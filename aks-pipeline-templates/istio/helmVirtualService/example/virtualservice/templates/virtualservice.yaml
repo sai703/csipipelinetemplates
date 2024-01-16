@@ -1,0 +1,29 @@
+{{- range $namespace := .Values.virtualservices.namespace }}
+{{- range $services := $namespace.hostName }}
+{{- range $paths := $services.paths}}
+{{- range $ports := $services.ports}}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ $.Values.virtualservices.name }}
+  namespace: {{ $namespace.name }}
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - {{ $.Values.gateway.name }}
+  http:
+  - match:
+    - uri:
+        prefix: {{ $paths}}
+    route:
+    - destination:
+        host: {{ $services.name }}
+        port:
+          number: {{ $ports }}
+---
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

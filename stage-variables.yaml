@@ -1,0 +1,238 @@
+parameters:
+  - name: "environment"
+  - name: "namespace_prefix"
+  - name: "sharedAKS"
+
+variables:
+  - name: aks_cluster_name
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: $(aks_cluster_name_uat_centralus) 
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: $(aks_cluster_name_uat_eastus2)    
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:
+      value: $(aks_cluster_name_prod_centralus)
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:
+      value: $(aks_cluster_name_prod_eastus2)
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS') }}:
+      value: $(aks_cluster_name_np_centralus)
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS') }}:
+      value: $(aks_cluster_name_np_centralus) 
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS' ) }}:
+      value: $(aks_cluster_name_np_centralus)
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2') }}:
+      value: $(aks_cluster_name_np_eastus2)
+    ${{ if eq(parameters.environment, 'QA_EASTUS2') }}:
+      value: $(aks_cluster_name_np_eastus2)
+    ${{ if eq(parameters.environment, 'STG_EASTUS2' ) }}:
+      value: $(aks_cluster_name_np_eastus2)
+  - name: aks_endpoint
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: $(aks_endpoint_uat_centralus) 
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: $(aks_endpoint_uat_eastus2)    
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:  
+      value: $(aks_endpoint_prod_centralus)
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:  
+      value: $(aks_endpoint_prod_eastus2)
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS' ) }}:
+      value:  $(aks_endpoint_np_centralus)
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS' ) }}:
+      value:  $(aks_endpoint_np_centralus)
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS' ) }}:
+      value:  $(aks_endpoint_np_centralus)
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2' ) }}:
+      value:  $(aks_endpoint_np_eastus2)
+    ${{ if eq(parameters.environment, 'QA_EASTUS2' ) }}:
+      value:  $(aks_endpoint_np_eastus2)
+    ${{ if eq(parameters.environment, 'STG_EASTUS2' ) }}:
+      value:  $(aks_endpoint_np_eastus2)
+  - name: aks_resource_group
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: $(aks_resource_group_uat_centralus) 
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: $(aks_resource_group_uat_eastus2)    
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:  
+      value: $(aks_resource_group_prod_centralus)
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:  
+      value: $(aks_resource_group_prod_eastus2)
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS' ) }}:
+      value: $(aks_resource_group_np_centralus)
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS' ) }}:
+      value: $(aks_resource_group_np_centralus)
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS' ) }}:
+      value: $(aks_resource_group_np_centralus)
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2' ) }}:
+      value: $(aks_resource_group_np_eastus2)
+    ${{ if eq(parameters.environment, 'QA_EASTUS2' ) }}:
+      value: $(aks_resource_group_np_eastus2)
+    ${{ if eq(parameters.environment, 'STG_EASTUS2' ) }}:
+      value: $(aks_resource_group_np_eastus2)
+  - name: azure_subscription_endpoint
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: $(azure_subscription_endpoint_uat_centralus) 
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: $(azure_subscription_endpoint_uat_eastus2)    
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:
+      value: $(azure_subscription_endpoint_prod_centralus)  
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:
+      value: $(azure_subscription_endpoint_prod_eastus2)
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS' ) }}:
+      value: $(azure_subscription_endpoint_np_centralus)
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS' ) }}:
+      value: $(azure_subscription_endpoint_np_centralus)
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS' ) }}:
+      value: $(azure_subscription_endpoint_np_centralus)
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2' ) }}:
+      value: $(azure_subscription_endpoint_np_eastus2)
+    ${{ if eq(parameters.environment, 'QA_EASTUS2' ) }}:
+      value: $(azure_subscription_endpoint_np_eastus2)
+    ${{ if eq(parameters.environment, 'STG_EASTUS2' ) }}:
+      value: $(azure_subscription_endpoint_np_eastus2)
+  - name: pool_agent
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: "ado-agents-linux-prod-centralus" 
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: "ado-agents-linux-prod-eastus2"    
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:
+      value: "ado-agents-linux-prod-centralus" 
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:
+      value: "ado-agents-linux-prod-eastus2"
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS' ) }}:
+      value: "ado-agents-linux-nonprod-centralus"
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS' ) }}:
+      value: "ado-agents-linux-nonprod-centralus"
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS' ) }}:
+      value: "ado-agents-linux-nonprod-centralus"
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2' ) }}:
+      value: "ado-agents-linux-nonprod-eastus2"
+    ${{ if eq(parameters.environment, 'QA_EASTUS2' ) }}:
+      value: "ado-agents-linux-nonprod-eastus2"
+    ${{ if eq(parameters.environment, 'STG_EASTUS2' ) }}:
+      value: "ado-agents-linux-nonprod-eastus2"    
+  - name: key_vault_suffix
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: "UatCUS" 
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: "UatEUS2"    
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:
+      value: "ProdCUS" 
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:
+      value: "EUS2"
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS') }}:
+      value: "DevCUS"
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2') }}:
+      value: "DevEUS2"  
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS') }}:
+      value: "QaCUS"
+    ${{ if eq(parameters.environment, 'QA_EASTUS2') }}:
+      value: "QaEUS2"
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS') }}:
+      value: "StgCUS"
+    ${{ if eq(parameters.environment, 'STG_EASTUS2') }}:
+      value: "StgEUS2"        
+  - name: user_assigned_identity
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: "$(aks_user_assigned_identity_uat_centralus)" 
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: "$(aks_user_assigned_identity_uat_eastus2)"    
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:
+      value: "$(aks_user_assigned_identity_prod_centralus)" 
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:
+      value: "$(aks_user_assigned_identity_prod_eastus2)"
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS') }}:
+      value: "$(aks_user_assigned_identity_np_centralus)"
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS') }}:
+      value: "$(aks_user_assigned_identity_np_centralus)"
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS') }}:
+      value: "$(aks_user_assigned_identity_np_centralus)"
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2') }}:
+      value: "$(aks_user_assigned_identity_np_eastus2)"
+    ${{ if eq(parameters.environment, 'QA_EASTUS2') }}:
+      value: "$(aks_user_assigned_identity_np_eastus2)"
+    ${{ if eq(parameters.environment, 'STG_EASTUS2') }}:
+      value: "$(aks_user_assigned_identity_np_eastus2)"
+  - name: namespace
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS') }}:
+      value: "${{ parameters.namespace_prefix }}-dev"
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2') }}:
+      value: "${{ parameters.namespace_prefix }}-dev"  
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS') }}:
+      value: "${{ parameters.namespace_prefix }}-qa"
+    ${{ if eq(parameters.environment, 'QA_EASTUS2') }}:
+      value: "${{ parameters.namespace_prefix }}-qa"
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS') }}:
+      value: "${{ parameters.namespace_prefix }}-stg"
+    ${{ if eq(parameters.environment, 'STG_EASTUS2') }}:
+      value: "${{ parameters.namespace_prefix }}-stg"
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS' ) }}:
+      value: "${{ parameters.namespace_prefix }}-uat"
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2' ) }}:
+      value: "${{ parameters.namespace_prefix }}-uat"
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS' ) }}:
+      value: "${{ parameters.namespace_prefix }}-prod"
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2' ) }}:
+      value: "${{ parameters.namespace_prefix }}-prod"
+  - name: serviceConnectionName
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: "RCG UAT"
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: "RCG UAT"
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:
+      value: "RCG Production"
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:
+      value: "RCG Production"
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS') }}:
+      value: "RCG NonProd"
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2') }}:
+      value: "RCG NonProd"
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS') }}:
+      value: "RCG NonProd"
+    ${{ if eq(parameters.environment, 'QA_EASTUS2') }}:
+      value: "RCG NonProd"
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS' ) }}:
+      value: "RCG NonProd"
+    ${{ if eq(parameters.environment, 'STG_EASTUS2' ) }}:
+      value: "RCG NonProd"
+  - name: shortEnv
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: "uat" 
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: "uat"    
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:
+      value: "prod" 
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:
+      value: "prod"
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS') }}:
+      value: "dev"
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2') }}:
+      value: "dev"  
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS') }}:
+      value: "qa"
+    ${{ if eq(parameters.environment, 'QA_EASTUS2') }}:
+      value: "qa"
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS') }}:
+      value: "stg"
+    ${{ if eq(parameters.environment, 'STG_EASTUS2') }}:
+      value: "stg"  
+
+  - name: chartNameEnv
+    ${{ if eq(parameters.environment, 'UAT_CENTRALUS') }}:
+      value: "uat" 
+    ${{ if eq(parameters.environment, 'UAT_EASTUS2') }}:
+      value: "uat"    
+    ${{ if eq(parameters.environment, 'PROD_CENTRALUS') }}:
+      value: "prod" 
+    ${{ if eq(parameters.environment, 'PROD_EASTUS2') }}:
+      value: "prod"
+    ${{ if eq(parameters.environment, 'DEV_CENTRALUS') }}:
+      value: "dev"
+    ${{ if eq(parameters.environment, 'DEV_EASTUS2') }}:
+      value: "dev"  
+    ${{ if eq(parameters.environment, 'QA_CENTRALUS') }}:
+      value: "qa"
+    ${{ if eq(parameters.environment, 'QA_EASTUS2') }}:
+      value: "qa"
+    ${{ if eq(parameters.environment, 'STG_CENTRALUS') }}:
+      value: "stg"
+    ${{ if eq(parameters.environment, 'STG_EASTUS2') }}:
+      value: "stg"

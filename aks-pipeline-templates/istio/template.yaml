@@ -1,0 +1,149 @@
+---
+parameters:
+- name: kubernetesServiceConnection
+  type: string
+- name: resourceGroupName
+  type: string
+- name: kubernetesCluster
+  type: string
+- name: istioIngressGatewayName
+  type: string
+- name: privateIp
+  type: string 
+- name: acr_subscription_endpoint
+  type: string
+- name: azure_acr_resource_group
+  type: string
+- name: azure_container_registry
+  type: string
+- name: chart_path
+  type: string
+- name: chart_name
+  type: string
+- name: chart_version
+  type: string
+- name: acr_username
+  type: string
+- name: acr_password
+  type: string
+- name: azure_resource_group
+  type: string
+- name: release_name
+  type: string
+- name : environment
+  type : string
+steps:
+- task: HelmDeploy@0
+  displayName: Helm repo add istio
+  inputs:
+    connectionType: Kubernetes Service Connection
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+    kubernetesCluster: ${{ parameters.kubernetesCluster }}
+    command: repo
+    arguments: add istio https://istio-release.storage.googleapis.com/charts
+
+- task: HelmDeploy@0
+  displayName: Helm repo update
+  inputs:
+    connectionType: Kubernetes Service Connection
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+    kubernetesCluster: ${{ parameters.kubernetesCluster }}
+    command: repo
+    arguments: update
+
+- task: Kubernetes@1
+  displayName: 'Create istio-system namespace'
+  inputs:
+    connectionType: Kubernetes Service Connection
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+    command: apply
+    useConfigurationFile: true
+    inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "istio-system" }}'
+
+- task: Kubernetes@1
+  displayName: 'Create istio-ingress namespace'
+  inputs:
+    connectionType: Kubernetes Service Connection
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+    command: apply
+    useConfigurationFile: true
+    inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "istio-ingress" }}'
+
+- task: HelmDeploy@0
+  displayName: Helm install istio base
+  inputs:
+    connectionType: Kubernetes Service Connection
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+    kubernetesCluster: ${{ parameters.kubernetesCluster }}
+    command: upgrade
+    chartName: 'istio/base'
+    releaseName: 'istio-base'
+    waitForExecution: false
+    arguments: -n istio-system 
+
+- task: HelmDeploy@0
+  displayName: Helm install istio istiod
+  inputs:
+    connectionType: Kubernetes Service Connection
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+    kubernetesCluster: ${{ parameters.kubernetesCluster }}
+    command: upgrade
+    chartName: 'istio/istiod'
+    releaseName: 'istiod'
+    waitForExecution: false
+    arguments: -n istio-system 
+
+- task: HelmDeploy@0
+  displayName: Helm install istio gateway
+  inputs:
+    connectionType: Kubernetes Service Connection
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+    kubernetesCluster: ${{ parameters.kubernetesCluster }}
+    command: upgrade
+    chartName: 'istio/gateway'
+    releaseName: 'istio-${{parameters.istioIngressGatewayName}}'
+    waitForExecution: false
+    arguments: -n istio-ingress 
+    overrideValues: service.loadBalancerIP=${{parameters.privateIp}}
+    valueFile: istio-gateway/override.yaml
+
+- task: HelmInstaller@1
+  displayName: Helm installer
+  inputs:
+    helmVersionToInstall: 3.6.3
+
+- task: HelmDeploy@0
+  displayName: Helm package
+  inputs:
+    command: package
+    chartPath: ${{ parameters.chart_path }}
+
+- task: Helmdeploy@0
+  displayName: Helm save
+  inputs:
+    command: save
+    chartNameForACR: ${{ parameters.chart_name }}:${{ parameters.chart_version }} 
+    chartPathForACR: ${{ parameters.chart_path }}
+    azureSubscriptionEndpointForACR: ${{ parameters.acr_subscription_endpoint }}
+    azureResourceGroupForACR: ${{ parameters.azure_acr_resource_group }}
+    azureContainerRegistry: ${{ parameters.azure_container_registry }}
+
+- bash: |
+    helm registry login ${{ parameters.azure_container_registry }} --username ${{ parameters.acr_username }} --password ${{ parameters.acr_password }}
+    helm pull oci://${{ parameters.azure_container_registry }}/helm/${{ parameters.chart_name }} --version ${{ parameters.chart_version }} -d $(Build.ArtifactStagingDirectory)  
+  displayName: Helm pull 
+
+- task: HelmDeploy@0
+  displayName: Helm install
+  inputs:
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+    azureResourceGroup: ${{ parameters.azure_resource_group }}
+    kubernetesCluster: ${{ parameters.kubernetesCluster }}
+    command: upgrade
+    releaseName: ${{ parameters.release_name }}
+    chartType: FilePath
+    chartPath: $(Build.ArtifactStagingDirectory)/${{ parameters.chart_name }}-${{ parameters.chart_version }}.tgz
+    overrideValues: 'environment=${{ parameters.environment}}'
+    connectionType: kubernetesServiceEndpoint
+    install: true
+    waitForExecution: false

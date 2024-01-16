@@ -1,0 +1,116 @@
+parameters:
+  - name: build_configuration
+    default: Release
+    type: string
+  - name: reports_folder
+    type: string
+    default: $(Artifacts.Directory)
+  - name: working_directory 
+    type: string 
+    default: $(Build.SourcesDirectory)
+  - name: fail_if_coverage_empty
+    type: boolean
+    default: true 
+  - name: test_flags
+    type: string
+    default: ""
+  - name: project_file
+    type: string
+    default: "**/*.csproj"
+  - name: line_coverage_threshold
+    type: number 
+    default: 80
+  - name: branch_coverage_threshold
+    type: number
+    default: 80
+  - name: vsts_feed
+    type: string
+    default: "" 
+  - name: az_cli_login
+    type: boolean
+    default: false
+  - name: client_id
+    type: string
+    default: ""
+  - name: client_secret
+    type: string
+    default: ""
+  - name: tenant_id
+    type: string
+    default: ""
+  - name: azure_subscription
+    type: string
+    default: ""
+
+steps:
+  - powershell: |
+      if(Test-Path $(Common.TestResultsDirectory)){
+        Remove-Item $(Common.TestResultsDirectory)/*.* -recurse
+      }
+    displayName: Clean Test Results if exists
+  
+  - task: AzureCLI@2
+    displayName: Azure CLI Login
+    condition: ${{ parameters.az_cli_login }}
+    inputs:
+      azureSubscription: ${{ parameters.azure_subscription }}
+      scriptType: pscore
+      scriptLocation: inlineScript
+      addSpnToEnvironment: true
+      inlineScript: |
+        az login --service-principal --username ${{ parameters.client_id }} --password ${{ parameters.client_secret }} --tenant ${{ parameters.tenant_id }}  
+
+  - task:  NuGetAuthenticate@1
+
+  - task: DotNetCoreCLI@2
+    displayName: restore
+    inputs:
+      command: "restore"  
+      arguments: "--force"
+      projects: ${{ parameters.project_file }}                 #"**/*.sln"
+      feedsToUse: 'select'
+      vstsFeed: ${{ parameters.vsts_feed }}
+      includeNuGetOrg: true
+      configuration: ${{ parameters.build_configuration }}
+      workingDirectory: ${{ parameters.working_directory }}
+
+  - task: DotNetCoreCLI@2
+    displayName: run tests
+    inputs:
+      command: "test"
+      publishTestResults: false
+      projects: ${{ parameters.project_file }}                  #"**/*.sln"
+      arguments: '-c ${{ parameters.build_configuration }} --collect:"XPlat Code Coverage" -r ${{ parameters.reports_folder }} ${{ parameters.test_flags }}' 
+
+  - task: reportgenerator@4
+    displayName: merge code coverage
+    inputs: 
+      reports: "${{ parameters.reports_folder }}/**/coverage.cobertura.xml"
+      targetdir: ${{ parameters.reports_folder }} 
+      reporttypes: Cobertura
+      verbosity: Verbose
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: "Cobertura"
+      summaryFileLocation: "${{ parameters.reports_folder }}/Cobertura.xml"                                   
+      failIfCoverageEmpty: ${{ parameters.fail_if_coverage_empty }}
+
+  - task: BuildQualityChecks@8
+    displayName: Check Line Coverage
+    inputs:
+      checkCoverage: true
+      coverageFailOption: "fixed"
+      coverageType: "lines"
+      coverageThreshold: ${{ parameters.line_coverage_threshold }}
+      runTitle: "lines"
+
+  - task: BuildQualityChecks@8
+    displayName: Check Branch Coverage
+    inputs:
+      checkCoverage: false
+      coverageFailOption: "fixed"
+      coverageType: "branches"
+      coverageThreshold: ${{ parameters.branch_coverage_threshold }}
+      runTitle: "branches"
+      

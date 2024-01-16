@@ -1,0 +1,3 @@
+env = "qa"
+
+location = "centralus" 

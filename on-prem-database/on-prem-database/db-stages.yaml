@@ -1,0 +1,126 @@
+parameters:
+  - name: project_file
+    type: object
+  - name: environment
+    type: object
+  - name: deployScriptPath
+    type: string
+    default: deploy_script.sql
+  - name: dev_environment_name
+    type: string
+  - name: qa_environment_name
+    type: string
+  - name: artifact_name
+    type: string
+  - name: dacpacName
+    type: string
+  - name: xmlName
+    type: string
+  
+  - name: ScriptOutputDirectory
+    type: string 
+    
+
+stages:
+- stage: BuildandPublish
+  displayName: Build and Publish
+  jobs:
+    - job: BuildDatabase
+      displayName: Build and Publish 
+      steps:
+        - template: /on-prem-database/db-build.yaml@application-pipeline-templates
+          parameters:
+            artifact_name: ${{ parameters.artifact_name }}
+            project_file: $(Build.SourcesDirectory)/${{ parameters.project_file }}
+
+- ${{ each env in parameters.environment }}:
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    - ${{ if or(not(contains(env.environment, dev_environment_name)), not(contains(env.environment, qa_environment_name))) }}:
+      - stage: Deploy_${{ replace(env.environment, '-', '_') }}
+        displayName: ${{ env.environment }}
+        jobs:
+        - deployment: GenerateScripts
+          pool: ${{ env.pool }}
+          displayName: Deploy ${{ env.environment }}
+          environment: ${{ env.environment }}
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                - template: /on-prem-database/db-prod-generatingScripts.yaml@application-pipeline-templates
+                  parameters:
+                    artifact_name: ${{ parameters.artifact_name }}
+                    databaseName: ${{ env.databaseName }}
+                    serverName: ${{ env.serverName }}
+                    environment: ${{ env.environment }}
+                    dacpacName: ${{ parameters.dacpacName }}
+                    xmlName: ${{ parameters.xmlName }} 
+                    DeployEnv: ${{ env.DeployEnv }}
+                    ScriptOutputDirectory: ${{ parameters.ScriptOutputDirectory }}
+        - job: WaitForScriptValidation
+          displayName: Wait for Manual Validation of SQL Scripts
+          dependsOn: GenerateScripts
+          timeoutInMinutes: 4320
+          steps:
+            - template: /on-prem-database/db-prod-validation.yaml@application-pipeline-templates
+              parameters:
+                ScriptOutputDirectory: ${{ parameters.ScriptOutputDirectory }}
+                
+                
+        - job: PublishScriptArtifacts
+          dependsOn: WaitForScriptValidation
+          steps:
+            - template: /on-prem-database/db-prod-deploy.yaml@application-pipeline-templates
+              parameters:
+                artifact_name: ${{ parameters.artifact_name }}
+                databaseName: ${{ env.databaseName }}
+                serverName: ${{ env.serverName }}
+                environment: ${{ env.environment }}
+                dacpacName: ${{ parameters.dacpacName }}
+                xmlName: ${{ parameters.xmlName }} 
+                DeployEnv: ${{ env.DeployEnv }} 
+    - ${{ if or(contains(env.environment, dev_environment_name), contains(env.environment, qa_environment_name)) }}:
+      - stage: Deploy_${{ replace(env.environment, '-', '_') }}
+        displayName: ${{ env.environment }}
+        jobs:
+        - deployment: DeployDatabaseSqlPackage
+          pool: ${{ env.pool }}
+          displayName: Deploy ${{ env.environment }}
+          environment: ${{ env.environment }}
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                - template: /on-prem-database/db-deploy.yaml@application-pipeline-templates
+                  parameters:
+                    artifact_name: ${{ parameters.artifact_name }}
+                    databaseName: ${{ env.databaseName }}
+                    serverName: ${{ env.serverName }}
+                    dacpacName: ${{ parameters.dacpacName }}
+                    environment: ${{ env.environment }}
+                    xmlName: ${{ parameters.xmlName }} 
+                    DeployEnv: ${{ env.DeployEnv }}
+                    ScriptOutputDirectory: ${{ parameters.ScriptOutputDirectory }}   
+                  
+  - ${{ if contains(variables['Build.SourceBranch'], 'refs/heads/feature/') }}:
+    - ${{ if contains(env.environment, parameters.dev_environment_name) }}:
+      - stage: Deploy_${{ replace(env.environment, '-', '_') }}
+        jobs:
+        - deployment: DeployDatabaseSqlPackage
+          pool: ${{ env.pool }}
+          displayName: Deploy ${{ env.environment }}
+          environment: ${{ env.environment }}
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                - template: /on-prem-database/db-deploy.yaml@application-pipeline-templates
+                  parameters:
+                    artifact_name: ${{ parameters.artifact_name }}
+                    databaseName: ${{ env.databaseName }}
+                    serverName: ${{ env.serverName }}
+                    dacpacName: ${{ parameters.dacpacName }}
+                    xmlName: ${{ parameters.xmlName }}
+                    DeployEnv: ${{ env.DeployEnv }}
+                    ScriptOutputDirectory: ${{ parameters.ScriptOutputDirectory }}
+              

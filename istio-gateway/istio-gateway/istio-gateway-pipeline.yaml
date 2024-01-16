@@ -1,0 +1,79 @@
+---
+trigger:
+  - none
+variables:
+  - group: multi-stage-pipeline-test-variables
+  - group: multi-stage-pipeline-build-variables
+  - group: csi-hem-variables
+resources:
+  repositories:
+    - repository: application-pipeline-templates
+      type: git
+      name: EBG DevOps/application-pipeline-templates
+      ref: multistagepipeline
+parameters:
+- name: pool
+  displayName: pool
+  type: string
+  values:
+    - vmss-agents-linux-nonprod-centralus
+    - ado-agents-linux-prod-centralus
+
+- name: environment
+  type: object
+  default:
+  - dev
+  - qa
+  - staging
+  - uat
+  - prod
+stages:
+  - stage: Test
+    displayName: Run All Tests
+    pool: ${{ parameters.pool }}
+    jobs:
+      - job: Test
+        displayName: Run Tests
+        steps:
+          - template: /application/dotnet/test.yaml@application-pipeline-templates
+            parameters:
+              az_cli_login: $(az_cli_login)
+              vsts_feed: $(vsts_feed)
+              azure_subscription: $(azure_subscription)
+              client_id: $(ARM_CLIENT_ID)
+              client_secret: $(ARM_CLIENT_SECRET)
+              tenant_id: $(ARM_TENANT_ID)
+              build_configuration: Build
+              working_directory: $(Build.SourcesDirectory)
+              reports_folder: $(Common.TestResultsDirectory)
+              project_file: $(project_file)
+  - stage: build_and_publish
+    displayName: Build and Publish
+    pool: ${{ parameters.pool }}
+    jobs:
+      - job: Build and publish artifacts
+        displayName: Build publish artifacts
+        steps:
+          - template: /function-app/build.yaml@application-pipeline-templates
+            parameters:
+              vsts_feed: Empire
+              artifact_name: coreservices_aplication
+              project_file: $(Build.SourcesDirectory)/$(projectfile_path)
+              app_name: afa-coreservices
+              azure_subscription: $(azure_subscription)
+  - ${{ each environment in parameters.environment }}:
+  - stage: ${{ environment }}
+    pool: ${{ parameters.pool }}
+    displayName: function app deployment- ${{ environment }}
+    dependsOn: build_and_publish
+    condition: succeeded()
+    jobs:
+      - job: Deploy
+        displayName: Deploy Functions to- ${{ environment }}
+        steps:
+          - template: /function-app/deploy.yaml@application-pipeline-templates
+            parameters:
+              artifact_name: coreservices-functionapps-dev
+              function_app_name: func-coreservices-funcctionapps-ebg-${{ environment}}-centralus
+              azure_subscription: $(service_connection)
+              environment: ${{ environment }}

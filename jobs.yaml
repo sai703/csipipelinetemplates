@@ -1,0 +1,93 @@
+parameters:
+  # variableGroup : test
+  jobs : []
+  app_name : ""
+  environment: ""
+  key_vault_prefix: ""
+  sharedAKS: false
+  buildVersion: ""
+# - job: Build_and_Deploy
+#   variables:
+#     chart_name: '$(app_name)-service'
+#     chart_path: '$(Build.SourcesDirectory)/chart'
+#     version: $(version)   
+
+#default: 'default_variable_group'
+#if variable_group = emptyString
+
+# variables:
+# - group: ${{ parameters.variableGroup }}
+
+jobs: 
+- ${{ each job in parameters.jobs }}: # Each job
+  - deployment: ${{ job.job }}
+    ## move variables and pool up to the stages level
+    variables: 
+      - template: stage-variables.yaml
+        parameters:
+          environment: ${{ parameters.environment }}
+          sharedAKS: ${{ parameters.sharedAKS }}
+          namespace_prefix: ${{ job.variables.namespace }} 
+    pool: ${{ variables.pool_agent }}    
+    environment: 'new-${{ variables.shortEnv }}'
+    strategy:
+      runOnce:
+        deploy:            
+          steps:
+            - bash: |
+                echo "DEBUG: Recursive DIR for DefaultWorkingDirectory $(System.DefaultWorkingDirectory):"
+                ls -Ralh $(System.DefaultWorkingDirectory)
+                echo "DEBUG: Recursive DIR for ArtifactsDirectory $(System.ArtifactsDirectory):"
+                ls -Ralh $(System.ArtifactsDirectory)
+              condition: true
+              displayName: "DEBUG: DIR Dumps"
+            - checkout: self
+              # Build Helm Chart
+            - template: /helm/helm-build.yaml
+              parameters:
+                azure_subscription_endpoint: ${{ variables.azure_subscription_endpoint }}
+                azure_resource_group: $(acr_resource_group)    
+                chart_path: ${{ job.variables.chart_path }}
+                chart_name: '${{ job.variables.chart_name }}-${{ variables.chartNameEnv }}'
+                chart_version: ${{ job.variables.version }}
+                azure_container_registry: $(azure_container_registry)
+            - template: /azure-pipeline-templates/get-keyvault-secret-names.yaml 
+              parameters:
+                app_name: ${{ parameters.app_name }}
+                key_vault_name: ${{ parameters.key_vault_prefix }}${{ variables.key_vault_suffix }}
+                buildVersion: ${{ parameters.buildVersion }}
+                serviceConnectionName: ${{ variables.serviceConnectionName }}                       
+            # - powershell: |
+            #     Write-Host $(arguments)              
+            # Deploy Helm Chart for Deployment
+            - template: /helm/helm-deploy.yaml
+              parameters:
+                kubernetes_service_endpoint: ${{ variables.aks_endpoint }}
+                azure_resource_group: ${{ variables.aks_resource_group }}
+                kubernetes_cluster: ${{ variables.aks_cluster_name }}
+                chart_name: '${{ job.variables.chart_name }}-${{ variables.chartNameEnv }}'
+                chart_version: ${{ job.variables.version }}
+                release_name: '${{ job.variables.chart_name }}-${{ variables.chartNameEnv }}'
+                azure_container_registry: $(azure_container_registry)
+                acr_username: $(ARM_CLIENT_ID)
+                acr_password: $(ARM_CLIENT_SECRET)
+                acr_tenant: $(ARM_TENANT_ID)
+                helmTimeout: 15m
+                arguments: $(arguments)
+                namespace: ${{ variables.namespace }}
+            
+            # - template: /helm/helm-test.yaml
+            #   parameters:
+            #     kubernetes_service_endpoint: ${{ variables.aks_endpoint }}
+            #     azure_resource_group: ${{ variables.aks_resource_group }}
+            #     kubernetes_cluster: ${{ variables.aks_cluster_name }}
+            #     deploymentName: '${{ job.variables.chart_name }}-${{ variables.chartNameEnv }}'
+            #     namespace: ${{ variables.namespace }}
+            #     runValidationTimeout: 300
+            #     imageName: '${{ job.variables.chart_name }}-${{ variables.chartNameEnv }}'
+            #     imageVersion: ${{ job.variables.version }}
+            #     azure_container_registry: $(azure_container_registry)
+            #     acr_username: $(ARM_CLIENT_ID)
+            #     acr_password: $(ARM_CLIENT_SECRET)
+              
+

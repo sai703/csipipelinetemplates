@@ -1,0 +1,11 @@
+variables:
+  - group : "CirrusAksProdEastUS2"
+  - group : "CirrusAksUatEastUS2"
+  - group : "CirrusAksNPEastUS2"
+  - group : "CirrusAksProdCentralUS"
+  - group : "CirrusAksUatCentralUS"
+  - group : "CirrusAksNPCentralUS"
+
+
+
+    

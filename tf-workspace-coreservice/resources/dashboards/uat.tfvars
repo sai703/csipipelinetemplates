@@ -1,0 +1,3 @@
+env = "uat"
+
+location = "centralus" 

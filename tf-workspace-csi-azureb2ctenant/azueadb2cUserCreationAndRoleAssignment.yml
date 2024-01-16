@@ -1,0 +1,42 @@
+trigger:
+  - none
+pool:
+   vmImage: 'ubuntu-latest'
+
+parameters:
+  - name: tenantId
+    type: string
+    default: '75a94048-9f1f-4561-967a-f25713c84b4e'
+  - name: appName
+    type: string
+    default: 'Test App'
+  - name: redirectUri
+    type: string
+    default: 'https://identity.test.com/signin-41-b2c_signin'
+  - name: frontChannelLogoutUrl
+    type: string
+    default: 'https://identity.test.com/signin-41-b2c_signin'
+
+  - name: userDisplayName
+    type: string
+    default: 'Nuthan Nomula'
+
+  - name: userPrincipalName
+    type: string
+    default: 'Nuthan.Nomula_csiweb.com@nuthantenant1326.onmicrosoft.com'
+
+  - name: mailNickName
+    type: string
+    default: 'NuthanNomula'
+    
+steps:
+  - task: AzurePowerShell@5
+    displayName: 'Run PowerShell Script'
+    inputs:
+      ScriptType: 'FilePath'
+      azureSubscription: 'CSITransformationSandbox(77233efb-37e6-4159-b817-fbbbd968dbe6)'
+      ScriptPath:  '$(Build.SourcesDirectory)/azureAdB2cAppRegistration.ps1'
+      ScriptArguments: '-tenantId "${{ parameters.tenantId }}" -appName "${{ parameters.appName }}" -redirectUri "${{ parameters.redirectUri }}" -frontChannelLogoutUrl "${{ parameters.frontChannelLogoutUrl }}" -userDisplayName "${{ parameters.userDisplayName }}"  -userPrincipalName "${{ parameters.userPrincipalName }}" -mailNickName "${{ parameters.mailNickName }}"'
+      azurePowerShellVersion: 'LatestVersion'
+
+      

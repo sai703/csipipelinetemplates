@@ -1,0 +1,53 @@
+parameters:
+- name: subscriptionId
+  type: string
+- name: resourceGroupName
+  type: string
+- name: clusterName
+  type: string
+- name: azureSubscriptionEndpoint
+  type: string
+- name: kubernetesServiceEndpoint
+  type: string
+- name: tenantId
+  type: string
+
+steps:
+- task: Kubernetes@1
+  displayName: kubectl service connection
+  inputs:
+    connectionType: Kubernetes Service Connection
+    kubernetesServiceEndpoint: ${{parameters.kubernetesServiceEndpoint}}
+
+# Create OIDC issuer URL
+- task: AzureCLI@2
+  displayName: Enable OIDCissuerURL
+  inputs:
+    azureSubscription: ${{parameters.azureSubscriptionEndpoint}}
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az extension add --name aks-preview
+
+      az extension update --name aks-preview
+
+      az account set --subscription ${{parameters.subscriptionId}}
+
+      az feature register --name EnableOIDCIssuerPreview --namespace Microsoft.ContainerService --subscription ${{parameters.subscriptionId}}
+
+      az aks update -n ${{parameters.clusterName}} -g ${{parameters.resourceGroupName}} --enable-oidc-issuer
+
+      az aks show -n ${{parameters.clusterName}} -g ${{parameters.resourceGroupName}}
+      
+      az aks get-credentials --resource-group ${{parameters.resourceGroupName}} --name ${{parameters.clusterName}} --overwrite
+#Helm-webhooks
+- task: AzureCLI@2
+  displayName: helm webhooks
+  inputs:
+    azureSubscription: ${{parameters.azureSubscriptionEndpoint}}
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      helm repo add azure-workload-identity https://azure.github.io/azure-workload-identity/charts
+      helm repo update
+      helm upgrade workload-identity-webhook azure-workload-identity/workload-identity-webhook --namespace azure-workload-identity-system --create-namespace --set azureTenantID="350118a2-b385-443c-a3d3-440dd3c3fde1"

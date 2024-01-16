@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.name }}
+  namespace: {{ .Values.gateway.namespace }}
+spec:
+  selector:
+    istio: {{ .Values.ingressgateway.name}} # use istio default controller
+  servers:
+  - port:
+      number: {{ .Values.portNumber.number }}
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: {{ .Values.tlssecret.name }}
+    hosts:
+    - "*"

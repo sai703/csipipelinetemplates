@@ -1,0 +1,55 @@
+# Starter pipeline
+
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: subscriptionId
+    value: "77233efb-37e6-4159-b817-fbbbd968dbe6"
+
+steps:
+  - script: |
+      az login
+    displayName: 'Azure Login'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        az account set --subscription $(subscriptionId)
+
+  - task: Bash@3
+    displayName: 'Terraform Installation'
+    inputs:
+      targetType: 'inline'
+      script: |
+        wget https://releases.hashicorp.com/terraform/1.4.5/terraform_1.4.5_linux_amd64.zip
+        unzip terraform_1.4.5_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+       
+  - task: PowerShell@2
+    displayName: 'Deploying Mulitple Tenants'
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Change working directory to the Terraform configuration path
+        $tfWorkingDir = "$(System.DefaultWorkingDirectory)/Terraform"
+        cd $tfWorkingDir
+        terraform init -input=false -backend-config="storage_account_name=azureaddb2cstatefiles" -backend-config="container_name=azureadb2cstatfilescontainer" -backend-config="access_key=CkMdoImOJ2mCD7BQfamWmNymVYQV7aW4PD8VzT1xLcsmDj54arpwV31nn4eSeUBV5qcwuYYr2O9W+AStzQaXGQ=="
+        terraform validate
+        terraform plan -var-file="values.tfvars"
+        terraform apply -var-file="values.tfvars" -auto-approve
+        $tenantId = terraform output -json tenant_id | ConvertFrom-Json
+        $tenantIdValue = $tenantId."0"
+
+        # Set the tenantId variable for future tasks
+        Write-Host "##vso[task.setvariable variable=tenantId]$tenantIdValue"
+
+    

@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Values.selfsignedissuer.name }}
+  namespace: {{ .Values.selfsignedissuer.namespace }}
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.selfsignedCertificate.name }}
+  namespace: {{ .Values.selfsignedCertificate.namespace }}
+spec:
+  secretName: {{ .Values.tlssecret.name }}
+  dnsNames:
+  - "*"
+  issuerRef:
+    name: {{ .Values.selfsignedissuer.name }}

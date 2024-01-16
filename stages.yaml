@@ -1,0 +1,96 @@
+parameters:
+  - name: jobs
+    type: object
+    default: []
+  - name: environments
+    type: object
+    default: []
+  - name: app_name
+    type: string
+    default: ""
+  - name: dockerfilepath
+    type: string
+    default: ""
+  - name: key_vault_prefix
+    type: string
+    default: ""
+  - name: runBuild
+    type: boolean
+    default: true
+  - name: isRabbitMQ
+    type: boolean
+    default: false
+  - name: sharedAKS
+    type: boolean
+    default: false
+  - name: DependsOn
+    type: object
+    default: ""
+  
+stages:
+  - stage: Build
+    condition: eq(${{ parameters.runBuild }}, true)
+    jobs:
+    - job: DotNetCore_Restore_and_Build
+      steps:  
+      # Provide access to custom nuget packages
+      - task: DotNetCoreCLI@2
+        displayName: Restore
+        env:
+          DOTNET_CLI_HOME: /tmp 
+        inputs:
+          command: restore
+          projects: "**/*.csproj"
+          vstsFeed: "18f0af6b-f21e-45e2-95ab-b321db131866"
+          restoreDirectory: "$(System.DefaultWorkingDirectory)/.nugets/"
+          verbosityRestore: Normal      
+      # Build Docker Image
+      - template: /docker/docker-build.yaml
+        parameters:  
+          build_context: $(Build.SourcesDirectory)
+          container_registry: $(acr_service_endpoint)
+          acr_url: $(azure_container_registry)
+          docker_repository: ${{ lower(parameters.app_name) }}
+          dockerfile_path: ${{ parameters.dockerfilepath }}
+          tag: |
+            $(Build.BuildId)
+            latest
+          risk_profile: internal.headless-services.nonpci
+          twistlock_id: $(twistlock_id)
+          twistlock_password: $(twistlock_password)
+          twistlock_project: RCGDevOps
+          arguments: --build-arg source="$(System.DefaultWorkingDirectory)/.nugets"
+  - ${{ each env in parameters.environments }}:        
+    - stage: ${{ env }}
+      condition: or( succeeded(), 'SucceededWithIssues')
+    # this breaks existing variables that are set
+    #variables:
+      # - template: stage-variables.yaml
+      #   parameters:
+      #     environment: ${{ env }}
+    #use another template here to set each of the variables # or(eq(env, 'DEV_EASTUS2'),eq(env, 'DEV_CENTRALUS')) 
+      # ${{ if ne(env, 'DEV_EASTUS2') }}:
+      #   dependsOn: |
+      #     or
+      #     ( 
+      #       in([ dependencies.DEV_EASTUS2.result ], 'Succeeded', 'SucceededWithIssues', 'Skipped')
+      #     ) 
+      # ${{ if and(eq(env, 'DEV_EASTUS2'),eq(env, 'DEV_CENTRALUS')) }}:
+      #   dependsOn: |
+      #     or
+      #     ( 
+      #       in(dependencies.DEV_EASTUS2.result, 'Succeeded', 'SucceededWithIssues', 'Skipped'),
+      #       in(dependencies.DEV_CENTRALUS.result, 'Succeeded', 'SucceededWithIssues', 'Skipped')
+      #     )           
+      jobs:
+      - template: /azure-pipeline-templates/jobs.yaml@application-pipeline-templates
+        parameters:  
+          service_version: ${{ parameters.service_version }}
+          jobs: ${{ parameters.jobs }}
+          app_name: ${{ parameters.app_name }}
+          environment: ${{ env }}
+          key_vault_prefix: ${{ parameters.key_vault_prefix }}
+          isRabbitMQ: ${{ parameters.isRabbitMQ }}
+          sharedAKS: ${{ parameters.sharedAKS }}
+          buildVersion: $(Build.BuildId)
+          

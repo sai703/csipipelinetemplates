@@ -1,0 +1,63 @@
+# File: build-and-deploy-database.yaml
+
+parameters:
+  - name: project_file
+    type: object
+  - name: environment
+    type: object
+  - name: serverName
+    type: string
+  - name: deployScriptPath
+    type: string
+    default: deploy_script.sql
+  - name: dev
+    type: string
+  - name: artifact_name
+    type: string
+  - name: dacpacName
+    type: string
+  - name: xmlName
+    type: string
+  
+  
+  
+stages:
+  - stage: BuildandPublish
+    displayName: Build and Publish
+    jobs:
+      - job: BuildDatabase
+        displayName:  Build and Publish 
+        steps:
+        - template: /on-prem-database/db-build.yaml@application-pipeline-templates
+          parameters:
+            artifact_name: ${{ parameters.artifact_name }}
+            project_file: $(Build.SourcesDirectory)/${{ parameters.project_file }} 
+
+      - ${{ each env in parameters.environment }}:      
+        - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+          - job: deploy${{ env.environment }}     
+            displayName: deploy${{ env.environment }}
+            dependsOn: BuildDatabase
+            steps:
+            - template: /on-prem-database/db-deploy.yaml@application-pipeline-templates
+              parameters:
+                artifact_name: ${{ parameters.artifact_name }}
+                databaseName: ${{ env.databaseName }}
+                serverName: ${{ parameters.serverName }}
+                dacpacName: ${{ parameters.dacpacName }}
+                xmlName: ${{ parameters.xmlName }}
+        - ${{ if contains(variables['Build.SourceBranch'], 'refs/heads/feature/') }}:
+          - ${{ if contains(env.environment, parameters.dev ) }}:
+            - job: deploy${{ env.environment }}   
+              displayName: deploy${{ env.environment }} 
+              dependsOn: BuildDatabase
+              steps:
+              - template: /on-prem-database/db-deploy.yaml@application-pipeline-templates
+                parameters:
+                  artifact_name: ${{ parameters.artifact_name }}
+                  databaseName: ${{ env.databaseName }}
+                  serverName: ${{ parameters.serverName }}
+                  dacpacName: ${{ parameters.dacpacName }}
+                  xmlName: ${{ parameters.xmlName }}
+            
+             

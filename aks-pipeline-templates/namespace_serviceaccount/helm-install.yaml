@@ -1,0 +1,72 @@
+parameters:
+- name: azure_subscription_endpoint
+  type: string
+- name: kubernetesServiceEndpoint
+  type: string
+- name: acr_resource_group
+  type: string
+- name: azure_container_registry
+  type: string
+- name: acr_username
+  type: string
+- name: acr_password
+  type: string
+- name: acr_tenant
+  type: string
+- name: chart_path
+  type: string
+- name: chart_name
+  type: string
+- name: chart_version
+  type: string
+- name: release_name
+  type: string
+- name: resourceGroupName
+  type: string
+- name: clusterName
+  type: string
+
+
+steps:
+- task: HelmInstaller@1
+  displayName: Helm installer
+  inputs:
+    helmVersionToInstall: 3.6.3
+
+- task: HelmDeploy@0
+  displayName: Helm package
+  inputs:
+    command: package
+    chartPath: ${{ parameters.chart_path }}
+
+- task: Helmdeploy@0
+  displayName: Helm save
+  inputs:
+    command: save
+    chartNameForACR: ${{ parameters.chart_name }}:${{ parameters.chart_version }} 
+    chartPathForACR: ${{ parameters.chart_path }}
+    azureSubscriptionEndpointForACR: ${{ parameters.azure_subscription_endpoint }}
+    azureResourceGroupForACR: ${{ parameters.acr_resource_group }}
+    azureContainerRegistry: ${{ parameters.azure_container_registry }}
+
+- bash: |
+    helm registry login ${{ parameters.azure_container_registry }} --username ${{ parameters.acr_username }} --password ${{ parameters.acr_password }}
+    helm pull oci://${{ parameters.azure_container_registry }}/helm/${{ parameters.chart_name }} --version ${{ parameters.chart_version }} -d $(Build.ArtifactStagingDirectory)
+  displayName: Helm pull
+
+
+- task: HelmDeploy@0
+  displayName: Helm install
+  inputs:
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceEndpoint }}
+    azureResourceGroup: ${{ parameters.resourceGroupName }}
+    kubernetesCluster:  ${{parameters.clusterName}} 
+    command: upgrade
+    releaseName: ${{ parameters.release_name }}
+    arguments: -n default
+    chartType: Name
+    # chartPath: ${{ parameters.chart_path }}
+    chartName: $(Build.ArtifactStagingDirectory)/${{ parameters.chart_name }}-${{ parameters.chart_version }}.tgz
+    connectionType: kubernetesServiceEndpoint
+    install: true
+    waitForExecution: false

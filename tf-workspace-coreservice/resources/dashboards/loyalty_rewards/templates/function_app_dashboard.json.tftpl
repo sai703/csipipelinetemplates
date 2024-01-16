@@ -1,0 +1,1383 @@
+{
+  "lenses": {
+    "0": {
+      "order": 0,
+      "parts": {
+        "0": {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "colSpan": 3,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [],
+            "type": "Extension/HubsExtension/PartType/MarkdownPart",
+            "settings": {
+              "content": {
+                "settings": {
+                  "content": "### App performance",
+                  "markdownSource": 1,
+                  "markdownUri": null,
+                  "subtitle": "",
+                  "title": ""
+                }
+              }
+            }
+          }
+        },
+        "1": {
+          "position": {
+            "x": 3,
+            "y": 0,
+            "colSpan": 4,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Average memory working set"
+                        },
+                        "name": "AverageMemoryWorkingSet",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 86400000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Average memory usage over time",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Average memory working set"
+                        },
+                        "name": "AverageMemoryWorkingSet",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "Average memory usage over time",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "2": {
+          "position": {
+            "x": 7,
+            "y": 0,
+            "colSpan": 4,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "CPU Time"
+                        },
+                        "name": "CpuTime",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 86400000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Average memory usage over time",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "CPU Time"
+                        },
+                        "name": "CpuTime",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "CPU consumption",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "3": {
+          "position": {
+            "x": 11,
+            "y": 0,
+            "colSpan": 4,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Thread Count"
+                        },
+                        "name": "Threads",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 2592000000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Thread count",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Thread Count"
+                        },
+                        "name": "Threads",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "Thread count",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "filters": {
+              "MsPortalFx_TimeRange": {
+                "model": {
+                  "format": "local",
+                  "granularity": "auto",
+                  "relative": "43200m"
+                }
+              }
+            }
+          }
+        },
+        "4": {
+          "position": {
+            "x": 15,
+            "y": 0,
+            "colSpan": 4,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 1,
+                        "metricVisualization": {
+                          "displayName": "Handle Count"
+                        },
+                        "name": "Handles",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 86400000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Sum Handle Count for clna31f8017-2633-4f8f-9fbc-888d15d14c78",
+                    "titleKind": 1,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 1,
+                        "metricVisualization": {
+                          "displayName": "Handle Count"
+                        },
+                        "name": "Handles",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "Sum Handle Count for clna31f8017-2633-4f8f-9fbc-888d15d14c78",
+                    "titleKind": 1,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "5": {
+          "position": {
+            "x": 0,
+            "y": 3,
+            "colSpan": 3,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [],
+            "type": "Extension/HubsExtension/PartType/MarkdownPart",
+            "settings": {
+              "content": {
+                "settings": {
+                  "content": "### Usage",
+                  "markdownSource": 1,
+                  "markdownUri": null,
+                  "subtitle": "",
+                  "title": ""
+                }
+              }
+            }
+          }
+        },
+        "6": {
+          "position": {
+            "x": 3,
+            "y": 3,
+            "colSpan": 6,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Response Time"
+                        },
+                        "name": "HttpResponseTime",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 2592000000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Response time",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Response Time"
+                        },
+                        "name": "HttpResponseTime",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "Response time",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "filters": {
+              "MsPortalFx_TimeRange": {
+                "model": {
+                  "format": "local",
+                  "granularity": "auto",
+                  "relative": "43200m"
+                }
+              }
+            }
+          }
+        },
+        "7": {
+          "position": {
+            "x": 9,
+            "y": 3,
+            "colSpan": 6,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Requests"
+                        },
+                        "name": "Requests",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 2592000000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Total requests",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Requests"
+                        },
+                        "name": "Requests",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "Total requests",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "filters": {
+              "MsPortalFx_TimeRange": {
+                "model": {
+                  "format": "local",
+                  "granularity": "auto",
+                  "relative": "43200m"
+                }
+              }
+            }
+          }
+        },
+        %{ if has_health_check }
+        "8": {
+          "position": {
+            "x": 15,
+            "y": 3,
+            "colSpan": 4,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        },
+                        "name": "HealthCheckStatus",
+                        "aggregationType": 4,
+                        "namespace": "microsoft.web/sites",
+                        "metricVisualization": {
+                          "displayName": "Health check status",
+                          "resourceDisplayName": "function app health check"
+                        }
+                      }
+                    ],
+                    "title": "Avg Health check status for function app health check",
+                    "titleKind": 1,
+                    "visualization": {
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "isVisible": true,
+                        "position": 2,
+                        "hideSubtitle": false
+                      },
+                      "axisVisualization": {
+                        "x": {
+                          "isVisible": true,
+                          "axisType": 2
+                        },
+                        "y": {
+                          "isVisible": true,
+                          "axisType": 1
+                        }
+                      },
+                      "disablePinning": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        %{ endif }
+        "9": {
+          "position": {
+            "x": 0,
+            "y": 6,
+            "colSpan": 3,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [],
+            "type": "Extension/HubsExtension/PartType/MarkdownPart",
+            "settings": {
+              "content": {
+                "settings": {
+                  "content": "### Http codes",
+                  "markdownSource": 1,
+                  "markdownUri": null,
+                  "subtitle": "",
+                  "title": ""
+                }
+              }
+            }
+          }
+        },
+        "10": {
+          "position": {
+            "x": 3,
+            "y": 6,
+            "colSpan": 6,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http Server Errors"
+                        },
+                        "name": "Http5xx",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 2592000000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Count of Http server errors",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http Server Errors"
+                        },
+                        "name": "Http5xx",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "Count of Http server errors",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "filters": {
+              "MsPortalFx_TimeRange": {
+                "model": {
+                  "format": "local",
+                  "granularity": "auto",
+                  "relative": "43200m"
+                }
+              }
+            }
+          }
+        },
+        "11": {
+          "position": {
+            "x": 9,
+            "y": 6,
+            "colSpan": 6,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 401"
+                        },
+                        "name": "Http401",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 403"
+                        },
+                        "name": "Http403",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 404"
+                        },
+                        "name": "Http404",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 404"
+                        },
+                        "name": "Http404",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 406"
+                        },
+                        "name": "Http406",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 2xx"
+                        },
+                        "name": "Http2xx",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 2592000000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Count of Http status codes",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 401"
+                        },
+                        "name": "Http401",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 403"
+                        },
+                        "name": "Http403",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 404"
+                        },
+                        "name": "Http404",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 404"
+                        },
+                        "name": "Http404",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 406"
+                        },
+                        "name": "Http406",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      },
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Http 2xx"
+                        },
+                        "name": "Http2xx",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "Count of Http status codes",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "12": {
+          "position": {
+            "x": 0,
+            "y": 9,
+            "colSpan": 3,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [],
+            "type": "Extension/HubsExtension/PartType/MarkdownPart",
+            "settings": {
+              "content": {
+                "settings": {
+                  "content": "### Bandwidth",
+                  "markdownSource": 1,
+                  "markdownUri": null,
+                  "subtitle": "",
+                  "title": ""
+                }
+              }
+            }
+          }
+        },
+        "13": {
+          "position": {
+            "x": 3,
+            "y": 9,
+            "colSpan": 6,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Data Out"
+                        },
+                        "name": "BytesSent",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 2592000000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Outgoing bandwidth",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Data Out"
+                        },
+                        "name": "BytesSent",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "Outgoing bandwidth",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "14": {
+          "position": {
+            "x": 9,
+            "y": 9,
+            "colSpan": 6,
+            "rowSpan": 3
+          },
+          "metadata": {
+            "inputs": [
+              {
+                "name": "options",
+                "value": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Data In"
+                        },
+                        "name": "BytesReceived",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "timespan": {
+                      "grain": 1,
+                      "relative": {
+                        "duration": 2592000000
+                      },
+                      "showUTCTime": false
+                    },
+                    "title": "Incoming bandwidth",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                },
+                "isOptional": true
+              },
+              {
+                "name": "sharedTimeRange",
+                "isOptional": true
+              }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "aggregationType": 7,
+                        "metricVisualization": {
+                          "displayName": "Data In"
+                        },
+                        "name": "BytesReceived",
+                        "namespace": "microsoft.web/sites",
+                        "resourceMetadata": {
+                          "id": "${function_app_id}"
+                        }
+                      }
+                    ],
+                    "title": "Incoming bandwidth",
+                    "titleKind": 2,
+                    "visualization": {
+                      "axisVisualization": {
+                        "x": {
+                          "axisType": 2,
+                          "isVisible": true
+                        },
+                        "y": {
+                          "axisType": 1,
+                          "isVisible": true
+                        }
+                      },
+                      "chartType": 2,
+                      "disablePinning": true,
+                      "legendVisualization": {
+                        "hideSubtitle": false,
+                        "isVisible": true,
+                        "position": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

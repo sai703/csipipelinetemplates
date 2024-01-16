@@ -1,0 +1,19 @@
+#Istio-virtualservice
+virtualservices:
+  name: vs07
+  namespace: 
+  - name: kubernetes-dashboard
+    hostName:
+      - name:  
+        paths:
+          - /helloKubernetes
+        port: 
+          - 80
+      - name: istiokubernetes
+        paths:
+          - /helloPod
+        port:
+          - 443
+
+gateway:
+  name: gateway47

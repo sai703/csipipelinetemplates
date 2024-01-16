@@ -1,0 +1,45 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: coreservices-gateway
+  namespace: default
+spec:
+  selector:
+    istio: core-gateway
+  servers:
+  # Only use one port for testing, later try adding multiple ports both https and http
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    {{ if eq .Values.environment "non-prod"}}
+    - "devcore-services.csiweb.cloud"
+    - "qacore-services.csiweb.cloud"
+    - "stgcore-services.csiweb.cloud"
+    {{ end}}
+    {{ if eq .Values.environment "uat"}}
+    - "uatcore-services.csiweb.cloud"
+    {{ end }}
+    {{ if eq .Values.environment "prod"}}
+    - "core-services.csiweb.cloud"
+    {{ end}}
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: images-sec
+    hosts:
+    {{ if eq .Values.environment "non-prod"}}
+    - "devcore-services.csiweb.cloud"
+    - "qacore-services.csiweb.cloud"
+    - "stgcore-services.csiweb.cloud"
+    {{ end}}
+    {{ if eq .Values.environment "uat"}}
+    - "uatcore-services.csiweb.cloud"
+    {{ end }}
+    {{ if eq .Values.environment "prod"}}
+    - "core-services.csiweb.cloud"
+    {{ end}}

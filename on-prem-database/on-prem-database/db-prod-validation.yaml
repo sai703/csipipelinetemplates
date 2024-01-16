@@ -1,0 +1,15 @@
+parameters:
+- name: SCRIPT_VALIDATION_EMAILS
+  type: string
+
+- name: ScriptOutputDirectory
+  type: string
+
+steps:
+- task: ManualValidation@0
+  timeoutInMinutes: 1440 # task times out in 1 day
+  inputs:
+    notifyUsers: |                          
+      SCRIPT_VALIDATION_EMAILS: ${{ parameters.SCRIPT_VALIDATION_EMAILS }}
+    instructions: Please validate the SQL scripts generated at ${{ parameters.ScriptOutputDirectory }} and alter them if needed.
+    onTimeout: reject

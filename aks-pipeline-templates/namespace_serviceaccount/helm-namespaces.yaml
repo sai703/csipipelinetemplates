@@ -1,0 +1,21 @@
+parameters:
+- name: subscriptionId
+  type: string
+- name: resourceGroupName
+  type: string
+- name: clusterName
+  type: string
+- name: azureSubscriptionEndpoint
+  type: string
+- name: kubernetesServiceEndpoint
+  type: string
+steps:
+- task: Kubernetes@1
+  displayName: helm namespaces
+  inputs:
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceEndpoint: ${{parameters.kubernetesServiceEndpoint}}
+    command: 'get'
+    arguments: 'ns -l istio-injection'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'

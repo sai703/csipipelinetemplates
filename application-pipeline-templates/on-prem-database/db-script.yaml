@@ -1,0 +1,53 @@
+---
+parameters:
+  - name: serverName
+    type: string
+
+  - name: databaseName
+    type: string
+
+  - name: artifact_name
+    type: string
+
+  - name: dacpacName
+    type: string
+
+  - name: xmlName
+    type: string
+
+  - name: DeployEnv
+    type: string
+
+  - name: ScriptOutputDirectory
+    type: string 
+
+  - name: JobName
+    type: string  
+   # default: ""     
+
+  - name: JobOwner
+    type: string
+   # default: ""     
+
+  - name: JobPath
+    type: string 
+  #  default: ""        
+
+  - name: DatabaseUserName
+    type: string
+  #  default: ""      
+  
+  
+
+steps:
+  - download: current
+    artifact: ${{ parameters.artifact_name }}
+  - task: SqlPackageVsts@1
+    inputs:
+      DeploymentAction: Script
+      SourceDacPac: $(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.dacpacName }}
+      PublishProfile: $(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.xmlName }}
+      TargetConnectionString: Server=${{ parameters.serverName }};Database=${{ parameters.databaseName }};Trusted_Connection=True;
+      OutputFile: '${{ parameters.ScriptOutputDirectory }}/$(Build.BuildNumber)/${{ parameters.serverName }}-script.sql'
+      additionalArguments: '/v:DeployEnv=${{ parameters.DeployEnv }} /v:DatabaseName=${{ parameters.databaseName }} /v:JobName=${{ parameters.JobName }} /v:JobOwner=${{ parameters.JobOwner }} /v:JobPath=${{ parameters.JobPath }} /v:DatabaseUserName=${{ parameters.DatabaseUserName }}' 
+      #additionalArguments: '/v:DeployEnv=${{ parameters.DeployEnv }}'

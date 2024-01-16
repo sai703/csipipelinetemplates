@@ -1,0 +1,21 @@
+module "translatecloudcore" {
+  source                       = "./app"
+  env                          = var.env
+  cosmos_sql_db                = var.cosmos_sql_db
+  failover_location            = var.failover_location
+  consistency_level            = var.consistency_level
+  container_attributes         = var.container_attributes
+  replication_type             = var.replication_type
+  account_tier                 = var.account_tier
+  location                     = var.location
+  rg_name_tc                   = var.rg_name_tc
+  rg_name_tcc                  = var.rg_name_tcc
+  storage_container_name       = var.storage_container_name
+  container_access_type        = var.container_access_type
+  tags_tc                      = var.tags_tc
+  tags_tcc                     = var.tags_tcc
+  role_appcfg_data_reader      = var.role_appcfg_data_reader
+  role_evh_data_receiver       = var.role_evh_data_receiver
+  subnet_id_translatescloudcore = var.subnet_id_translatescloudcore
+  identity_type                = var.identity_type
+}

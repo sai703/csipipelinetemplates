@@ -1,0 +1,56 @@
+trigger: none
+
+parameters:
+  - name: kubernetesServiceEndpoint
+    type: string
+  - name: azureresourcegroup
+    type: string
+  - name: clusterName
+    type: string
+  - name: gateway_chart_name
+    type: string 
+  - name: gateway_chart_version
+    type: string
+  - name: gateway_chart_path
+    type: string
+  - name: gateway_release_name
+    type: string
+  - name: virtualservice_chart_name
+    type: string 
+  - name: virtualservice_chart_version
+    type: string
+  - name: virtualservice_chart_path
+    type: string
+  - name: virtualservice_release_name
+    type: string
+
+pool: 
+ vmImage: ubuntu-latest
+
+resources:
+  repositories:
+  - repository: aks-pipeline-templates
+    type: git
+    name: EBG DevOps/aks-pipeline-templates
+    ref: feature/namespace
+
+steps:
+- template: istio/helmGateway/template.yaml@aks-pipeline-templates
+  parameters:
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceEndpoint}}
+    resourceGroupName: ${{parameters.azureresourcegroup}}
+    chart_path: ${{parameters.gateway_chart_path}}
+    clusterName: ${{parameters.clusterName}}
+    chart_name: ${{parameters.gateway_chart_name}}
+    chart_version: ${{parameters.gateway_chart_version}}
+    release_name: ${{parameters.gateway_release_name}}
+
+- template: istio/helmGateway/template.yaml@aks-pipeline-templates
+  parameters:
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceEndpoint}}
+    resourceGroupName: ${{parameters.azureresourcegroup}}
+    chart_path: ${{parameters.virtualservice_chart_path}}
+    clusterName: ${{parameters.clusterName}}
+    chart_name: ${{parameters.virtualservice_chart_name}}
+    chart_version: ${{parameters.virtualservice_chart_version}}
+    release_name: ${{parameters.virtualservice_release_name}}

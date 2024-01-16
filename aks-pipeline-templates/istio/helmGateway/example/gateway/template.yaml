@@ -1,0 +1,17 @@
+parameters:
+
+steps:
+- task: HelmDeploy@0
+  displayName: Helm install
+  inputs:
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceEndpoint }}
+    azureResourceGroup: ${{ parameters.resourceGroupName }}
+    kubernetesCluster:  ${{parameters.clusterName}} 
+    command: upgrade
+    releaseName: ${{ parameters.release_name }}
+    arguments: -n default
+    chartType: Name
+    chartName: $(Build.ArtifactStagingDirectory)/${{ parameters.chart_name }}-${{ parameters.chart_version }}.tgz
+    connectionType: kubernetesServiceEndpoint
+    install: true
+    waitForExecution: false

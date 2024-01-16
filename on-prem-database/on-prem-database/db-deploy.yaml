@@ -1,0 +1,44 @@
+parameters:
+
+- name: serverName
+  type: string
+
+- name: databaseName
+  type: string
+
+- name: artifact_name
+  type: string
+- name: dacpacName
+  type: string
+- name: xmlName
+  type: string
+- name: DeployEnv
+  type: string
+- name: ScriptOutputDirectory
+  type: string  
+
+
+steps:
+- download: current
+  artifact: ${{ parameters.artifact_name }}
+      
+- task: SqlPackageVsts@1
+  displayName: 'Generate Publish Script'
+  inputs:
+    DeploymentAction: Script
+    SourceDacPac: '$(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.dacpacName }}'
+    TargetConnectionString: 'Server=${{ parameters.serverName }};Database=${{ parameters.databaseName }};Trusted_Connection=True;'
+    OutputFile: '${{ parameters.ScriptOutputDirectory }}/script.sql'
+    PublishProfile: '$(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.xmlName }}'
+    additionalArguments: '/v:DeployEnv=${{ parameters.DeployEnv }}'
+
+
+
+- task: SqlPackageVsts@1
+  displayName: 'Publish Database'
+  inputs:
+    DeploymentAction: Publish
+    SourceDacPac: '$(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.dacpacName }}'
+    TargetConnectionString: 'Server=${{ parameters.serverName }};Database=${{ parameters.databaseName }};Trusted_Connection=True;'
+    PublishProfile: '$(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.xmlName }}'
+    additionalArguments: '/v:DeployEnv=${{ parameters.DeployEnv }}'

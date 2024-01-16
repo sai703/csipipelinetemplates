@@ -1,0 +1,43 @@
+parameters:
+- name: kubernetesServiceEndpoint
+  type: string
+- name: resourceGroupName
+  type: string
+- name: clusterName
+  type: string
+- name: chart_path
+  type: string
+- name: chart_name
+  type: string
+- name: chart_version
+  type: string
+- name: release_name
+  type: string
+  
+steps:
+- task: HelmInstaller@1
+  displayName: Helm installer
+  inputs:
+    helmVersionToInstall: 3.6.3
+
+- task: HelmDeploy@0
+  displayName: Helm package
+  inputs:
+    command: package
+    chartPath: ${{ parameters.chart_path }}
+
+- task: HelmDeploy@0
+  displayName: Helm install
+  inputs:
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceEndpoint }}
+    azureResourceGroup: ${{ parameters.resourceGroupName }}
+    kubernetesCluster:  ${{parameters.clusterName}} 
+    command: upgrade
+    releaseName: ${{ parameters.release_name }}
+    arguments: -n default
+    chartType: Name
+    # chartPath: ${{ parameters.chart_path }}
+    chartName: $(Build.ArtifactStagingDirectory)/${{ parameters.chart_name }}-${{ parameters.chart_version }}.tgz
+    connectionType: kubernetesServiceEndpoint
+    install: true
+    waitForExecution: false

@@ -1,0 +1,79 @@
+trigger: none
+
+variables:
+- group: Transformationsandbox-helmvariables
+- name: azure_container_registry
+  value: acrdigitalbankingebgsandboxeastus2.azurecr.io
+parameters:
+  - name: subscriptionId
+    type: string
+  - name: azureSubscriptionEndpoint
+    type: string
+  - name: kubernetesServiceEndpoint
+    type: string
+  - name: acrSubscriptionEndpoint
+    type: string
+  - name: azureresourcegroup
+    type: string
+  - name: acrresourcegroup
+    type: string
+  - name: clusterName
+    type: string
+  - name: namespace
+    type: string
+  - name: chart_name
+    type: string 
+  - name: chart_version
+    type: string
+  - name: chart_path
+    type: string
+  - name: release_name
+    type: string
+pool: 
+ vmImage: ubuntu-latest
+resources:
+  repositories:
+  - repository: aks-pipeline-templates
+    type: git
+    name: EBG DevOps/aks-pipeline-templates
+    ref: feature-istio-vsgw
+
+steps:
+- template: enable-OIDC/OIDC-template.yaml@aks-pipeline-templates
+  parameters: 
+    azureSubscriptionEndpoint: ${{ parameters.azureSubscriptionEndpoint }}
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceEndpoint}}
+    subscriptionId: ${{parameters.subscriptionId}}
+    resourceGroupName: ${{parameters.azureresourcegroup}}
+    clusterName: ${{parameters.clusterName}}
+    tenantId: $(ARM_TENANT_ID)
+
+- template: namespace_serviceaccount/helm-install.yaml@aks-pipeline-templates
+  parameters:
+    azure_subscription_endpoint: ${{parameters.acrSubscriptionEndpoint}}
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceEndpoint}}
+    acr_resource_group: ${{ parameters.acrresourcegroup }}
+    resourceGroupName: ${{parameters.azureresourcegroup}}
+    chart_path: ${{parameters.chart_path}}
+    azure_container_registry: $(azure_container_registry)
+    clusterName: ${{parameters.clusterName}}
+    acr_username: $(ARM_CLIENT_ID)
+    acr_password: $(ARM_CLIENT_SECRET)
+    acr_tenant: $(ARM_TENANT_ID)
+    chart_name: ${{parameters.chart_name}}
+    chart_version: ${{parameters.chart_version}}
+    release_name: ${{parameters.release_name}}
+
+- template: namespace_serviceaccount/helm-namespaces.yaml@aks-pipeline-templates
+  parameters:
+    azureSubscriptionEndpoint: ${{ parameters.azureSubscriptionEndpoint }}
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceEndpoint}}
+    subscriptionId: ${{parameters.subscriptionId}}
+    resourceGroupName: ${{parameters.azureresourcegroup}}
+    clusterName: ${{parameters.clusterName}}
+
+
+- template: namespace_serviceaccount/helm-serviceaccounts.yaml@aks-pipeline-templates
+  parameters:
+    kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceEndpoint }}
+    namespace: ${{parameters.namespace}}

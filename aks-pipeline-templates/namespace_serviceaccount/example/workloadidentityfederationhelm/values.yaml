@@ -1,0 +1,18 @@
+#Namespaces-serviceaccounts
+namespaces:
+  - name: kubernetes-dashboard
+    serviceaccounts:
+      - dev
+      - qa
+      - uat
+      - prod
+  - name: nodejs-dashboard
+    serviceaccounts:
+      - dev
+      - qa
+      - uat
+      - prod
+
+#label
+app:
+  name: sandboxNamespaces

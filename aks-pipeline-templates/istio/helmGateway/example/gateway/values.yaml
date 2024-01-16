@@ -1,0 +1,23 @@
+#istioingressgateway
+ingressgateway:
+  name: ingresstest
+
+#Istio-gateway
+gateway:
+  name: gateway47
+  namespace: kubernetes-dashboard
+
+portNumber:
+  number: 80
+
+#cert-manager.io
+selfsignedissuer:
+  name: selfsignedissuer
+  namespace: istio-ingress
+
+selfsignedCertificate:
+  name: selfsignedcertificate
+  namespace: istio-ingress
+
+tlssecret: 
+  name: tlsselfsignedsecrets
